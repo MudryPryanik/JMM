@@ -12,8 +12,8 @@ import org.openjdk.jcstress.infra.results.II_Result;
 @Description("Classic test that demonstrates memory reordering")
 @Outcome(id = "1, 1", expect = Expect.ACCEPTABLE)
 @Outcome(id = {"0, 1", "1, 0"}, expect = Expect.ACCEPTABLE)
-@Outcome(id = "0, 0", expect = Expect.FORBIDDEN)
-public class JmmReorderingTest {
+@Outcome(id = "0, 0", expect = Expect.ACCEPTABLE_INTERESTING)
+public class SameMonitorTest {
 
     @Actor
     public final void actor1(DataHolder dataHolder, II_Result r) {
@@ -30,14 +30,20 @@ public class JmmReorderingTest {
         private int x;
         private int y;
 
+        private final Object monitor = new Object();
+
         public int actor1() {
-            x = 1;
-            return y;
+            synchronized (monitor) {
+                x = 1;
+                return y;
+            }
         }
 
         public int actor2() {
-            y = 1;
-            return x;
+            synchronized (monitor) {
+                y = 1;
+                return x;
+            }
         }
     }
 }

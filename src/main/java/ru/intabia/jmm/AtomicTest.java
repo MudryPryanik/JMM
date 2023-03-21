@@ -8,12 +8,14 @@ import org.openjdk.jcstress.annotations.Outcome;
 import org.openjdk.jcstress.annotations.State;
 import org.openjdk.jcstress.infra.results.II_Result;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @JCStressTest
 @Description("Classic test that demonstrates memory reordering")
 @Outcome(id = "1, 1", expect = Expect.ACCEPTABLE)
 @Outcome(id = {"0, 1", "1, 0"}, expect = Expect.ACCEPTABLE)
-@Outcome(id = "0, 0", expect = Expect.FORBIDDEN)
-public class JmmReorderingTest {
+@Outcome(id = "0, 0", expect = Expect.ACCEPTABLE_INTERESTING)
+public class AtomicTest {
 
     @Actor
     public final void actor1(DataHolder dataHolder, II_Result r) {
@@ -27,17 +29,17 @@ public class JmmReorderingTest {
 
     @State
     public static class DataHolder {
-        private int x;
-        private int y;
+        private final AtomicInteger x = new AtomicInteger(0);
+        private final AtomicInteger y = new AtomicInteger(0);
 
         public int actor1() {
-            x = 1;
-            return y;
+            x.addAndGet(1);
+            return y.get();
         }
 
         public int actor2() {
-            y = 1;
-            return x;
+            y.addAndGet(1);
+            return x.get();
         }
     }
 }

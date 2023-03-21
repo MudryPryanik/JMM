@@ -12,8 +12,8 @@ import org.openjdk.jcstress.infra.results.II_Result;
 @Description("Classic test that demonstrates memory reordering")
 @Outcome(id = "1, 1", expect = Expect.ACCEPTABLE)
 @Outcome(id = {"0, 1", "1, 0"}, expect = Expect.ACCEPTABLE)
-@Outcome(id = "0, 0", expect = Expect.FORBIDDEN)
-public class JmmReorderingTest {
+@Outcome(id = "0, 0", expect = Expect.ACCEPTABLE_INTERESTING)
+public class VolatileTest {
 
     @Actor
     public final void actor1(DataHolder dataHolder, II_Result r) {
@@ -27,8 +27,8 @@ public class JmmReorderingTest {
 
     @State
     public static class DataHolder {
-        private int x;
-        private int y;
+        private volatile int x;
+        private volatile int y;
 
         public int actor1() {
             x = 1;
