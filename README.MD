@@ -1,1 +1,1 @@
-java -jar target/jcstress.jar -t JmmReorderingTest -v -f 10
+java -jar target/jcstress.jar -t JmmReorderingTest -m quick
